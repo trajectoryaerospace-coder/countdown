@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Tracker</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: white;
+}
+
+.container {
+    text-align: center;
+    padding: 40px;
+    border-radius: 25px;
+    backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.25);
+    width: 95%;
+    max-width: 750px;
+}
+
+/* Main Section */
+h1 {
+    font-size: 1.7rem;
+    margin-bottom: 20px;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.timer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.box {
+    background: rgba(0, 0, 0, 0.35);
+    padding: 18px;
+    border-radius: 15px;
+    transition: transform 0.2s ease;
+}
+
+.box:hover {
+    transform: scale(1.05);
+}
+
+.number {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #00ffff;
+}
+
+.label {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Special Birthday Section */
+.special-title {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    margin-top: 20px;
+    color: #ff8bd1;
+    text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+}
+
+.special-timer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.special-box {
+    background: rgba(255, 105, 180, 0.1);
+    padding: 18px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+}
+
+.special-number {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ff69b4;
+}
+
+.special-label {
+    font-size: 0.75rem;
+    opacity: 0.9;
+    margin-top: 5px;
+    text-transform: uppercase;
+}
+
+/* Tiny Day Before Countdown */
+.mini-countdown {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    margin-top: 5px;
+}
+
+.footer {
+    margin-top: 30px;
+    font-size: 0.7rem;
+    opacity: 0.5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Time Since Start of Book Revierw</h1>
+    <div class="timer">
+        <div class="box"><div class="number" id="days">0</div><div class="label">Days</div></div>
+        <div class="box"><div class="number" id="hours">0</div><div class="label">Hours</div></div>
+        <div class="box"><div class="number" id="minutes">0</div><div class="label">Minutes</div></div>
+        <div class="box"><div class="number" id="seconds">0</div><div class="label">Seconds</div></div>
+    </div>
+
+    <div class="special-title">Time Until...</div>
+
+    <div class="special-timer">
+        <div class="special-box"><div class="special-number" id="bDays">0</div><div class="special-label">Days</div></div>
+        <div class="special-box"><div class="special-number" id="bHours">0</div><div class="special-label">Hours</div></div>
+        <div class="special-box"><div class="special-number" id="bMinutes">0</div><div class="special-label">Minutes</div></div>
+        <div class="special-box"><div class="special-number" id="bSeconds">0</div><div class="special-label">Seconds</div></div>
+    </div>
+
+    <div class="mini-countdown">
+        🌙 Countdown to the day before (9 August 2026):
+        <span id="mini"></span>
+    </div>
+
+    <div class="footer">
+        Some dates are just more important than others.
+    </div>
+
+</div>
+
+<script>
+const startDate = new Date("2026-02-04T00:00:00");
+const birthday = new Date("2026-08-10T00:00:00");
+const dayBefore = new Date("2026-08-09T00:00:00");
+
+function update() {
+    const now = new Date();
+
+    /* Time Since Feb 4 */
+    const diff = now - startDate;
+    if (diff > 0) {
+        const total = Math.floor(diff / 1000);
+        document.getElementById("days").textContent = Math.floor(total / 86400);
+        document.getElementById("hours").textContent = Math.floor((total % 86400) / 3600);
+        document.getElementById("minutes").textContent = Math.floor((total % 3600) / 60);
+        document.getElementById("seconds").textContent = total % 60;
+    }
+
+    /* Birthday Countdown */
+    const bDiff = birthday - now;
+    if (bDiff > 0) {
+        const total = Math.floor(bDiff / 1000);
+        document.getElementById("bDays").textContent = Math.floor(total / 86400);
+        document.getElementById("bHours").textContent = Math.floor((total % 86400) / 3600);
+        document.getElementById("bMinutes").textContent = Math.floor((total % 3600) / 60);
+        document.getElementById("bSeconds").textContent = total % 60;
+    } else {
+        document.querySelector(".special-title").textContent = "🎉 IT'S HER BIRTHDAY 🎉";
+    }
+
+    /* Mini Countdown */
+    const miniDiff = dayBefore - now;
+    if (miniDiff > 0) {
+        const miniDays = Math.floor(miniDiff / (1000 * 60 * 60 * 24));
+        document.getElementById("mini").textContent = miniDays + " days left";
+    } else {
+        document.getElementById("mini").textContent = "It's the special eve 🌙";
+    }
+}
+
+setInterval(update, 1000);
+update();
+</script>
+
+</body>
+</html>
